@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Hotel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class HotelController extends Controller
 {
@@ -42,11 +43,23 @@ class HotelController extends Controller
         $hotel->update($request->all());
         return response()->json($hotel);
     }
+    
 
     public function destroy($id)
     {
         $hotel = Hotel::findOrFail($id);
+
+        // Menghapus semua foto terkait
+        foreach ($hotel->photos as $photo) {
+            if (Storage::disk('public')->exists($photo->photo_path)) {
+                Storage::disk('public')->delete($photo->photo_path);
+            }
+            $photo->delete();
+        }
+
+        // Hapus hotel dari database
         $hotel->delete();
+
         return response()->json(null, 204);
     }
 }

@@ -39,15 +39,18 @@ class PhotoController extends Controller
 
     public function destroy($id)
     {
-        
         $photo = Photo::findOrFail($id);
 
         // Menghapus file foto dari storage
-        Storage::disk('public')->delete($photo->photo_path);
+        if (Storage::disk('public')->exists($photo->photo_path)) {
+            Storage::disk('public')->delete($photo->photo_path);
+        } else {
+            return response()->json(['message' => 'Photo file not found'], 404);
+        }
 
         // Menghapus entri foto dari database
         $photo->delete();
 
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Photo deleted successfully!'], 204);
     }
 }

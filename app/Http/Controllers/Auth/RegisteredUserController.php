@@ -45,4 +45,40 @@ class RegisteredUserController extends Controller
             'user' => $user
         ]);
     }
+    public function update(Request $request, $id)
+    {
+        // Cari user berdasarkan ID
+        $user = User::findOrFail($id);
+
+        // Validasi input
+        $request->validate([
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users,email,' . $id],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'address' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        // Perbarui data user hanya jika ada input
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+        if ($request->has('email')) {
+            $user->email = $request->email;
+        }
+    
+        if ($request->has('phone')) {
+            $user->phone = $request->phone;
+        }
+        if ($request->has('address')) {
+            $user->address = $request->address;
+        }
+      
+
+        $user->save(); // Simpan perubahan
+
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => $user
+        ]);
+    }
 }

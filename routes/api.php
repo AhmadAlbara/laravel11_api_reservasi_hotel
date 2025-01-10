@@ -9,6 +9,7 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\RoomTypeController;
 use Illuminate\Http\Request;
 
 Route::post('/register', [RegisteredUserController::class, 'store']);
@@ -18,6 +19,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::put('/user/{id}', [RegisteredUserController::class, 'update'])->name('users.update');
+
 
 Route::get('/hotels', [HotelController::class, 'index']);
 Route::get('/hotels/{id}', [HotelController::class, 'show']);
@@ -25,6 +28,13 @@ Route::post('/hotels', [HotelController::class, 'store']);
 Route::put('/hotels/{id}', [HotelController::class, 'update']);
 Route::delete('/hotels/{id}', [HotelController::class, 'destroy']);
 
+
+
+Route::get('/room-types', [RoomTypeController::class, 'index']);
+Route::get('/room-types/{id}', [RoomTypeController::class, 'show']);
+Route::post('/room-types', [RoomTypeController::class, 'store']);
+Route::put('/room-types/{id}', [RoomTypeController::class, 'update']);
+Route::delete('/room-types/{id}', [RoomTypeController::class, 'destroy']);  
 
 Route::get('/rooms', [RoomController::class, 'index']);
 Route::get('/rooms/{id}', [RoomController::class, 'show']);
